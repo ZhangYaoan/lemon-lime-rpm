@@ -1,0 +1,8 @@
+diff -ur ../lemon-lime-0.3.4.4.orig/assets/lemon-lime.desktop.in ./assets/lemon-lime.desktop.in
+--- ../lemon-lime-0.3.4.4.orig/assets/lemon-lime.desktop.in	2023-08-16 22:31:03.000000000 +0800
++++ ./assets/lemon-lime.desktop.in	2024-07-15 20:45:25.115879419 +0800
+@@ -21,3 +21,4 @@
+ Exec=lemon
+ Icon=lemon-lime
+ MimeType=application/x-lemon-contest;
++StartupWMClass=lemon
