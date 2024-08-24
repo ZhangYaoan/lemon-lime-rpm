@@ -25,7 +25,7 @@ A tiny judging environment for OI contest based on Lemon + LemonPlus
 %prep
 %setup -c Lemon-%{version}-source-all
 cd %{_builddir}/%{name}-%{version}
-%patch0 -p1
+%patch 0 -p1
 %define INSTALL_PREFIX %{buildroot}/usr
 %define BUILD_SOURCE %{_builddir}/%{name}-%{version}
 %define BUILD_DIR %{_builddir}/%{name}-%{version}/build
