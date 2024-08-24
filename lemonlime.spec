@@ -1,5 +1,5 @@
 Name: lemon-lime
-Version: 0.3.4.4
+Version: 0.3.5
 Release: %autorelease
 Summary: A tiny judging environment for OI contest based on Lemon + LemonPlus
 BuildArch: x86_64
@@ -9,12 +9,15 @@ Source0: https://github.com/Project-LemonLime/Project_LemonLime/releases/downloa
 # Add icon to panel
 Patch0: panel-icon.patch
 
+BuildRequires:  p7zip
 BuildRequires:  cmake >= 3.9
-BuildRequires:  qt5-qtbase-devel >= 5.11
-BuildRequires:  qt5-linguist
-BuildRequires:  qt5-qtsvg-devel
+BuildRequires:  qt6-qtbase-devel
+BuildRequires:  qt6-linguist
+BuildRequires:  qt6-qtsvg-devel
+BuildRequires:  qt6-qttools-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  ninja-build
+BuildRequires:  xcb-util-cursor
 
 %description
 A tiny judging environment for OI contest based on Lemon + LemonPlus
@@ -23,16 +26,22 @@ A tiny judging environment for OI contest based on Lemon + LemonPlus
 %setup -c Lemon-%{version}-source-all
 cd %{_builddir}/%{name}-%{version}
 %patch0 -p1
+%define INSTALL_PREFIX %{buildroot}/usr
+%define BUILD_SOURCE %{_builddir}/%{name}-%{version}
+%define BUILD_DIR %{_builddir}/%{name}-%{version}/build
 
 %build
-%cmake -DCMAKE_BUILD_TYPE=Release \
-       -GNinja
-cd redhat-linux-build
-%ninja_build
+export _LEMON_BUILD_INFO_="LemonLime built by Fedora COPR"
+export _LEMON_BUILD_EXTRA_INFO_="(Unofficial Build) $(uname -a | cut -d ' ' -f3,13), Qt $(pkg-config --modversion Qt6Core)"
+cmake -S %{BUILD_SOURCE} -B %{BUILD_DIR} \
+    -DCMAKE_INSTALL_PREFIX="%{INSTALL_PREFIX}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLEMON_QT6=ON \
+    -GNinja
+ninja -C %{BUILD_DIR}
 
 %install
-cd redhat-linux-build
-%ninja_install
+ninja -C %{BUILD_DIR} install
 
 %files
 %license LICENSE
@@ -43,6 +52,3 @@ cd redhat-linux-build
 %{_datadir}/metainfo/lemon-lime.metainfo.xml
 %{_datadir}/mime/application/x-lemon-contest.xml
 %{_includedir}/testlib_for_lemons.h
-# %{_datadir}/lemon-lime/lang/*.qm
-# %dir %{_datadir}/lemon-lime
-# %dir %{_datadir}/lemon-lime/lang
